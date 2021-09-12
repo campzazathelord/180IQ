@@ -6,18 +6,35 @@ import classes from './AddUser.module.css';
 
 const MainPage = (props) => {
   const items = ['+','-','*','/']
-  let item1 = items[Math.floor(Math.random()*items.length)];
-  let item2 = items[Math.floor(Math.random()*items.length)];
-  let item3 = items[Math.floor(Math.random()*items.length)];
+  let [item1,setItems1] = useState(items[Math.floor(Math.random()*items.length)])
+  let [item2,setItems2] = useState(items[Math.floor(Math.random()*items.length)])
+  let [item3,setItems3] = useState(items[Math.floor(Math.random()*items.length)])
   let [generateNumbers,setGenerateNumbers]=useState([String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10))])
-  let [added,setAdded] = useState(eval(generateNumbers[0]+item1+generateNumbers[1]+item2+generateNumbers[2]+item3+generateNumbers[3]))
-  let [solution,setSolution]=useState(generateNumbers[0]+item1+generateNumbers[1]+item2+generateNumbers[2]+item3+generateNumbers[3])
+  let [beforeAdded,setBeforeAdded] = useState(generateNumbers[0]+item1+generateNumbers[1]+item2+generateNumbers[2]+item3+generateNumbers[3])
+  let [added,setAdded] = useState(eval(beforeAdded))
   let [typedAnswer,setTypedAnswer]=useState('')
   let [broadcastCorrect,setBroadCastCorrect]=useState(undefined)
   let [score,setScore]=useState(10)
   let [end,setEnd]=useState(false)
   let [won,setWon]=useState(false)
-  console.log(solution)
+  console.log(generateNumbers)
+  console.log(beforeAdded)
+  console.log(added)
+
+  const createNum = ()=>{
+    const item1 = items[Math.floor(Math.random()*items.length)]
+    const item2 = items[Math.floor(Math.random()*items.length)]
+    const item3 = items[Math.floor(Math.random()*items.length)]
+    const generateNum = [String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10))]
+    setGenerateNumbers([...generateNum])
+    setBeforeAdded(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3])
+    setAdded(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]))
+    console.log(generateNum)
+    console.log(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3])
+    console.log(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]))
+    setTypedAnswer('')
+    return
+  }
   const errorHandler = () => {
     setEnd(false);
     setWon(false)
@@ -28,23 +45,35 @@ const MainPage = (props) => {
     event.preventDefault();
     for (let items of generateNumbers){
       if(!String(typedAnswer).includes(String(items))){
+        console.log("wrong")
         setBroadCastCorrect(false)
-        setGenerateNumbers([String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10))])
-        setAdded(eval(generateNumbers[0]+item1+generateNumbers[1]+item2+generateNumbers[2]+item3+generateNumbers[3]))
-        setTypedAnswer('')
         setScore(score-=5)
         if(score===0){
           setEnd(true)
         }
+        createNum();
         return
       }
     }
     if (typedAnswer.length===0){
+      console.log("wrong")
       setBroadCastCorrect(false)
+      setScore(score-=5)
+      if(score===0){
+        setEnd(true)
+      }
+      createNum();
       return
+
     }
     if (String(typedAnswer)===String(added)){
+      console.log("wrong")
       setBroadCastCorrect(false)
+      setScore(score-=5)
+      if(score===0){
+        setEnd(true)
+      }
+      createNum();
       return
     }
     if (eval(typedAnswer)===added){
@@ -54,9 +83,7 @@ const MainPage = (props) => {
       if(score===30){
         setWon(true)
       }
-      setGenerateNumbers([String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10))])
-      setAdded(eval(generateNumbers[0]+item1+generateNumbers[1]+item2+generateNumbers[2]+item3+generateNumbers[3]))
-      setTypedAnswer('')
+      createNum();
     }
     else{
       console.log("wrong")
@@ -65,9 +92,7 @@ const MainPage = (props) => {
       if(score===0){
         setEnd(true)
       }
-      setGenerateNumbers([String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10))])
-      setAdded(eval(generateNumbers[0]+item1+generateNumbers[1]+item2+generateNumbers[2]+item3+generateNumbers[3]))
-      setTypedAnswer('')
+      createNum();
     }
   }
   const typedAnswerHandler=(event)=>{
