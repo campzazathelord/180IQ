@@ -47,11 +47,11 @@ const renderer = ({ seconds, completed }) => {
     const item4 = items[Math.floor(Math.random()*items.length)]
     const generateNum = [getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9)]
     setGenerateNumbers([...generateNum])
-    setBeforeAdded(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNumbers[4])
-    setAdded(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNumbers[4]))
+    setBeforeAdded(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNum[4])
+    setAdded(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNum[4]))
     console.log(generateNum)
-    console.log(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNumbers[4])
-    console.log(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNumbers[4]))
+    console.log(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNum[4])
+    console.log(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNum[4]))
     setTypedAnswer('')
     return
   }
