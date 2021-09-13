@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
+import ReactDOM from 'react-dom';
+import Countdown from 'react-countdown';
 import Card from '../UI/Card';
 import Button from '../UI/Button';
 import ErrorModal from '../UI/ErrorModal';
@@ -6,45 +8,65 @@ import classes from './AddUser.module.css';
 
 const MainPage = (props) => {
   const items = ['+','-','*','/']
+  const ansInputRef = useRef()
   let [item1,setItems1] = useState(items[Math.floor(Math.random()*items.length)])
   let [item2,setItems2] = useState(items[Math.floor(Math.random()*items.length)])
   let [item3,setItems3] = useState(items[Math.floor(Math.random()*items.length)])
-  let [generateNumbers,setGenerateNumbers]=useState([String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10))])
-  let [beforeAdded,setBeforeAdded] = useState(generateNumbers[0]+item1+generateNumbers[1]+item2+generateNumbers[2]+item3+generateNumbers[3])
+  let [item4,setItems4] = useState(items[Math.floor(Math.random()*items.length)])
+  let [generateNumbers,setGenerateNumbers]=useState([getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9)])
+  let [beforeAdded,setBeforeAdded] = useState(generateNumbers[0]+item1+generateNumbers[1]+item2+generateNumbers[2]+item3+generateNumbers[3]+item4+generateNumbers[4])
   let [added,setAdded] = useState(eval(beforeAdded))
   let [typedAnswer,setTypedAnswer]=useState('')
   let [broadcastCorrect,setBroadCastCorrect]=useState(undefined)
   let [score,setScore]=useState(10)
   let [end,setEnd]=useState(false)
   let [won,setWon]=useState(false)
+  let [time,setTime]=useState(false)
   console.log(generateNumbers)
   console.log(beforeAdded)
   console.log(added)
+  function getRandomIntBetween(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+const Completionist = () => <span>Time's Up!</span>;
+const renderer = ({ seconds, completed }) => {
+  if (completed) {
+    setTime(true)
+    return <Completionist />;
+  } else {
+    return <span>{seconds}</span>;
+  }
+};
 
   const createNum = ()=>{
     const item1 = items[Math.floor(Math.random()*items.length)]
     const item2 = items[Math.floor(Math.random()*items.length)]
     const item3 = items[Math.floor(Math.random()*items.length)]
+    const item4 = items[Math.floor(Math.random()*items.length)]
     const generateNum = [String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10))]
     setGenerateNumbers([...generateNum])
-    setBeforeAdded(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3])
-    setAdded(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]))
+    setBeforeAdded(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNumbers[4])
+    setAdded(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNumbers[4]))
     console.log(generateNum)
-    console.log(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3])
-    console.log(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]))
+    console.log(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNumbers[4])
+    console.log(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNumbers[4]))
     setTypedAnswer('')
     return
   }
   const errorHandler = () => {
     setEnd(false);
     setWon(false)
+    setTime(false)
+    window.location.reload(false)
     setScore(10)
     setBroadCastCorrect(undefined)
   };
   const submitHandler=(event)=>{
     event.preventDefault();
     for (let items of generateNumbers){
-      if(!String(typedAnswer).includes(String(items))){
+      if(!String(ansInputRef.current.value).includes(String(items))){
         console.log("wrong")
         setBroadCastCorrect(false)
         setScore(score-=5)
@@ -52,10 +74,11 @@ const MainPage = (props) => {
           setEnd(true)
         }
         createNum();
+        ansInputRef.current.value = ''
         return
       }
     }
-    if (typedAnswer.length===0){
+    if (ansInputRef.current.value.length===0){
       console.log("wrong")
       setBroadCastCorrect(false)
       setScore(score-=5)
@@ -63,10 +86,11 @@ const MainPage = (props) => {
         setEnd(true)
       }
       createNum();
+      ansInputRef.current.value = ''
       return
 
     }
-    if (String(typedAnswer)===String(added)){
+    if (String(ansInputRef.current.value)===String(added)){
       console.log("wrong")
       setBroadCastCorrect(false)
       setScore(score-=5)
@@ -74,9 +98,10 @@ const MainPage = (props) => {
         setEnd(true)
       }
       createNum();
+      ansInputRef.current.value = ''
       return
     }
-    if (eval(typedAnswer)===added){
+    if (eval(ansInputRef.current.value)===added){
       console.log("Correct")
       setBroadCastCorrect(true)
       setScore(score+=5)
@@ -84,6 +109,7 @@ const MainPage = (props) => {
         setWon(true)
       }
       createNum();
+      ansInputRef.current.value = ''
     }
     else{
       console.log("wrong")
@@ -93,13 +119,17 @@ const MainPage = (props) => {
         setEnd(true)
       }
       createNum();
+      ansInputRef.current.value = ''
     }
-  }
-  const typedAnswerHandler=(event)=>{
-    setTypedAnswer(event.target.value)
   }
   return (
     <Card className={classes.input4}>
+            {time &&
+        <ErrorModal
+          title='Announcement'
+          message='Your time is up!'
+          onConfirm={errorHandler}
+        />}
       {end &&
         <ErrorModal
           title='Announcement'
@@ -115,7 +145,10 @@ const MainPage = (props) => {
 
       <Card className={classes.input3}>
       <Card className={classes.input2}>
-        <h1 className={classes.titlee} style={{fontSize:'300%'}} >IQ 180 </h1>
+      <h1 className={classes.titlee} style={{fontSize:'300%'}} >IQ 180 </h1>
+        <h1 className={classes.titlee} style={{fontSize:'200%'}} >Time Remaining: <span>        <Countdown
+    date={Date.now() + 20000}
+    renderer={renderer}/></span></h1>
       </Card>
         <h3 style={{textAlign:'center'}}>{'Use the following numbers'}</h3>
         <h1 style={{textAlign:'center'}}>{generateNumbers.join(',')}</h1>
@@ -123,8 +156,7 @@ const MainPage = (props) => {
         <h3 style={{textAlign:'center'}}>{`Target Number: ${added}`}</h3><h1></h1>
         <form onSubmit={submitHandler} style={{textAlign:'center'}}>       
           <input
-            onChange={typedAnswerHandler}
-            value={typedAnswer}
+            ref={ansInputRef}
           />
           <h1></h1>
           <Button type="submit">Submit</Button>
