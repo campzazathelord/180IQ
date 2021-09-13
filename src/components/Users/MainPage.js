@@ -45,7 +45,7 @@ const renderer = ({ seconds, completed }) => {
     const item2 = items[Math.floor(Math.random()*items.length)]
     const item3 = items[Math.floor(Math.random()*items.length)]
     const item4 = items[Math.floor(Math.random()*items.length)]
-    const generateNum = [String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10)),String(Math.floor(Math.random() * 10))]
+    const generateNum = [getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9)]
     setGenerateNumbers([...generateNum])
     setBeforeAdded(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNumbers[4])
     setAdded(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNumbers[4]))
