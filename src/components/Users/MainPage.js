@@ -7,7 +7,7 @@ import ErrorModal from '../UI/ErrorModal';
 import classes from './AddUser.module.css';
 
 const MainPage = (props) => {
-  const items = ['+','-','*','/']
+  const [items,setItems] = useState(['+','-','*'])
   const ansInputRef = useRef()
   let [item1,setItems1] = useState(items[Math.floor(Math.random()*items.length)])
   let [item2,setItems2] = useState(items[Math.floor(Math.random()*items.length)])
@@ -41,11 +41,19 @@ const renderer = ({ seconds, completed }) => {
 };
 
   const createNum = ()=>{
+    const items = ['+','-','*','/']
     const item1 = items[Math.floor(Math.random()*items.length)]
     const item2 = items[Math.floor(Math.random()*items.length)]
     const item3 = items[Math.floor(Math.random()*items.length)]
     const item4 = items[Math.floor(Math.random()*items.length)]
-    const generateNum = [getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9)]
+    let generateNum = [getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9)]
+    let stringEval = (generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNum[4])
+    let mathEval = eval(stringEval)
+    while (mathEval%1 !== 0){
+      generateNum = [getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9),getRandomIntBetween(1,9)]
+      stringEval = (generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNum[4])
+      mathEval = eval(stringEval)
+    }
     setGenerateNumbers([...generateNum])
     setBeforeAdded(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNum[4])
     setAdded(eval(generateNum[0]+item1+generateNum[1]+item2+generateNum[2]+item3+generateNum[3]+item4+generateNum[4]))
@@ -147,7 +155,7 @@ const renderer = ({ seconds, completed }) => {
       <Card className={classes.input2}>
       <h1 className={classes.titlee} style={{fontSize:'300%'}} >IQ 180 </h1>
         <h1 className={classes.titlee} style={{fontSize:'200%'}} >Time Remaining: <span>        <Countdown
-    date={Date.now() + 20000}
+    date={Date.now() + 59000}
     renderer={renderer}/></span></h1>
       </Card>
         <h3 style={{textAlign:'center'}}>{'Use the following numbers'}</h3>
